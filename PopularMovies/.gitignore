@@ -1,3 +1,4 @@
+/app/src/main/res/values/keys.xml
 *.iml
 .gradle
 /local.properties
