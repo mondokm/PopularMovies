@@ -1,5 +1,7 @@
 package com.hhdev.milan.popularmovies;
 
+import android.net.Uri;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -29,8 +31,19 @@ public class NetworkTools {
         }
     }
 
-    public URL buildUrl(){
+    public URL buildUrl(String baseUrl, String key){
+        Uri builtUri = Uri.parse(baseUrl).buildUpon()
+                .appendQueryParameter("api_key", key)
+                .build();
 
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return url;
     }
 
 }
