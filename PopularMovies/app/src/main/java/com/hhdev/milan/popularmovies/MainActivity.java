@@ -62,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
             if(params.length == 0){
                 return null;
             }
-
             try{
-                String jsonResponse = NetworkTools.getResponseFromHTTP(new URL())
+                String jsonResponse = NetworkTools.getResponseFromHTTP(NetworkTools.buildUrl(NetworkTools.POPULAR_URL, getString(R.string.themoviedb_key_v3))); //insert your own key here
+                
+            }catch (Exception e){
+                e.printStackTrace();
             }
 
         }

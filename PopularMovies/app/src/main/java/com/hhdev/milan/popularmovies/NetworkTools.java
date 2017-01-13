@@ -31,7 +31,7 @@ public class NetworkTools {
         }
     }
 
-    public URL buildUrl(String baseUrl, String key){
+    public static URL buildUrl(String baseUrl, String key){
         Uri builtUri = Uri.parse(baseUrl).buildUpon()
                 .appendQueryParameter("api_key", key)
                 .build();
