@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    static String THE_MOVIE_DB_BASE_URL = "http://image.tmdb.org/t/p/w185/";
+
     public String[] posterPaths;
 
     public MovieAdapter(String[] posterPaths) {
@@ -39,7 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public void onBindViewHolder(MovieViewHolder viewHolder, int pos){
-        String url = THE_MOVIE_DB_BASE_URL + posterPaths[pos];
+        String url = NetworkTools.THE_MOVIE_DB_IMG_URL + posterPaths[pos];
         Context context = viewHolder.poster.getContext();
         Picasso.with(context).load(url).into(viewHolder.poster);
     }
