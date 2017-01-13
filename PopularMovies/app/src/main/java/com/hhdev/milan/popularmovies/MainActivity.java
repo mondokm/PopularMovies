@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public List getData(){
+    public String[] getData(){
 
     }
 }

@@ -15,6 +15,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     static String THE_MOVIE_DB_BASE_URL = "http://image.tmdb.org/t/p/w185/";
     public String[] posterPaths;
 
+    public MovieAdapter(String[] posterPaths) {
+        this.posterPaths = posterPaths;
+    }
+
     public class MovieViewHolder extends RecyclerView.ViewHolder{
         ImageView poster;
 
