@@ -7,9 +7,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
+    MovieAdapter movieAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,5 +36,9 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public List getData(){
+
     }
 }
