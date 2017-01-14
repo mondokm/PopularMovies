@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         loadingIndicator = (ProgressBar) findViewById(R.id.main_loading);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        new FetchDataTask().execute(NetworkTools.POPULAR_URL);
+        new FetchDataTask().execute(NetworkTools.TOP_RATED_URL);
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
