@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,18 +50,38 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.main_menu_sort:
-                if(popular){
-                    fetchData(NetworkTools.TOP_RATED_URL);
-                    popular = false;
-                    setTitle(getString(R.string.top_rated));
-                } else{
-                    fetchData(NetworkTools.POPULAR_URL);
-                    popular = true;
-                    setTitle(getString(R.string.popular));
-                }
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this,findViewById(R.id.main_menu_sort));
+                popupMenu.setOnMenuItemClickListener(new PopupMenuItemClickListener());
+                popupMenu.inflate(R.menu.sort_menu);
+                popupMenu.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public class PopupMenuItemClickListener implements PopupMenu.OnMenuItemClickListener{
+        public boolean onMenuItemClick(MenuItem item){
+            switch (item.getItemId()){
+                case R.id.sort_menu_popular:
+                    if(popular) return true;
+                    else {
+                        popular = true;
+                        fetchData(NetworkTools.POPULAR_URL);
+                        setTitle(getString(R.string.popular));
+                        return true;
+                    }
+                case R.id.sort_menu_top_rated:
+                    if(!popular) return true;
+                    else {
+                        popular = false;
+                        fetchData(NetworkTools.TOP_RATED_URL);
+                        setTitle(getString(R.string.top_rated));
+                        return true;
+                    }
+                 default:
+                     return false;
+            }
         }
     }
 
