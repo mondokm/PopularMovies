@@ -10,18 +10,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URL;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    MovieAdapter movieAdapter;
     ProgressBar loadingIndicator;
 
     @Override
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         loadingIndicator = (ProgressBar) findViewById(R.id.main_loading);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        new FetchDataTask().execute(NetworkTools.TOP_RATED_URL);
+        new FetchDataTask().execute(NetworkTools.POPULAR_URL);
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -63,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
             loadingIndicator.setVisibility(View.GONE);
             recyclerView.setAdapter(new MovieAdapter(data));
             recyclerView.setVisibility(View.VISIBLE);
-
         }
 
         protected JSONObject[] doInBackground(String[] params){

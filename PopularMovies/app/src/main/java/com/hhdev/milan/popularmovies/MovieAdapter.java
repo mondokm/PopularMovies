@@ -1,8 +1,8 @@
 package com.hhdev.milan.popularmovies;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +45,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             String url = NetworkTools.THE_MOVIE_DB_IMG_URL + movieDetails[pos].getString("poster_path");
             Context context = viewHolder.poster.getContext();
             viewHolder.poster.setTag(movieDetails[pos]);
+            Log.d("DEBUG",url);
             Picasso.with(context).load(url).into(viewHolder.poster);
         } catch(Exception e){
             e.printStackTrace();

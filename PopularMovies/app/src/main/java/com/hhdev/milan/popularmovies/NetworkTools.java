@@ -12,7 +12,7 @@ public class NetworkTools {
 
     public static String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular";
     public static String TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated";
-    static String THE_MOVIE_DB_IMG_URL = "http://image.tmdb.org/t/p/w500/";
+    static String THE_MOVIE_DB_IMG_URL = "http://image.tmdb.org/t/p/w342/";
 
     public static String getResponseFromHTTP(URL url) throws IOException{
         HttpURLConnection urlconnection = (HttpURLConnection) url.openConnection();
