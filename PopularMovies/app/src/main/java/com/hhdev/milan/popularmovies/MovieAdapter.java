@@ -10,13 +10,15 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
 
-    public String[] posterPaths;
+    public JSONObject[] movieDetails;
 
-    public MovieAdapter(String[] posterPaths) {
-        this.posterPaths = posterPaths;
+    public MovieAdapter(JSONObject[] movieDetails) {
+        this.movieDetails = movieDetails;
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder{
@@ -39,18 +41,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public void onBindViewHolder(MovieViewHolder viewHolder, int pos){
-        String url = NetworkTools.THE_MOVIE_DB_IMG_URL + posterPaths[pos];
-        Context context = viewHolder.poster.getContext();
-        Picasso.with(context).load(url).into(viewHolder.poster);
+        try{
+            String url = NetworkTools.THE_MOVIE_DB_IMG_URL + movieDetails[pos].getString("poster_path");
+            Context context = viewHolder.poster.getContext();
+            viewHolder.poster.setTag(movieDetails[pos]);
+            Picasso.with(context).load(url).into(viewHolder.poster);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public int getItemCount(){
-        if(posterPaths == null) return 0;
-        return posterPaths.length;
+        if(movieDetails == null) return 0;
+        return movieDetails.length;
     }
 
-    public void swapData(String[] paths){
-        posterPaths = paths;
+    public void swapData(JSONObject[] details){
+        movieDetails = details;
         notifyDataSetChanged();
     }
 
