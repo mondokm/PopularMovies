@@ -5,13 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+
 import android.widget.ProgressBar;
 
 import org.json.JSONArray;
@@ -22,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ProgressBar loadingIndicator;
 
+    boolean popular;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
         loadingIndicator = (ProgressBar) findViewById(R.id.main_loading);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        new FetchDataTask().execute(NetworkTools.POPULAR_URL);
+        recyclerView.setAdapter(new MovieAdapter());
+        fetchData(NetworkTools.POPULAR_URL);
+        popular = true;
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -40,10 +42,22 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void fetchData(String url){
+        new FetchDataTask().execute(url);
+    }
+
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
-            case R.id.main_menu_settings:
-                //open settings
+            case R.id.main_menu_sort:
+                if(popular){
+                    fetchData(NetworkTools.TOP_RATED_URL);
+                    popular = false;
+                    setTitle(getString(R.string.top_rated));
+                } else{
+                    fetchData(NetworkTools.POPULAR_URL);
+                    popular = true;
+                    setTitle(getString(R.string.popular));
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -59,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(JSONObject[] data){
             loadingIndicator.setVisibility(View.GONE);
-            recyclerView.setAdapter(new MovieAdapter(data));
+            ((MovieAdapter)recyclerView.getAdapter()).swapData(data);
             recyclerView.setVisibility(View.VISIBLE);
         }
 

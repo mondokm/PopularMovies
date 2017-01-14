@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_sort">Change order</string>
+    <string name="popular">Popular Movies</string>
+    <string name="top_rated">Top rated Movies</string>
 </resources>

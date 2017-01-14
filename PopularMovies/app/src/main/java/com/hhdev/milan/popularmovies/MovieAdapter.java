@@ -17,10 +17,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public JSONObject[] movieDetails;
 
-    public MovieAdapter(JSONObject[] movieDetails) {
-        this.movieDetails = movieDetails;
-    }
-
     public class MovieViewHolder extends RecyclerView.ViewHolder{
         ImageView poster;
 
