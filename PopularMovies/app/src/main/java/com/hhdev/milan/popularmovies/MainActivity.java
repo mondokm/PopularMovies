@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(JSONObject[] data){
-            loadingIndicator.setVisibility(View.GONE);
             ((MovieAdapter)recyclerView.getAdapter()).addData(data);
             listener.loadingDone();
             recyclerView.setVisibility(View.VISIBLE);
@@ -148,14 +147,22 @@ public class MainActivity extends AppCompatActivity {
             if(loading){
                 return;
             }
-            if(!recyclerView.canScrollVertically(1)){
-                loading = true;
-                loadingIndicator.setVisibility(View.VISIBLE);
-                currentPage++;
-                if(popular){
-                    fetchData(NetworkTools.POPULAR_URL,currentPage+"");
-                } else{
-                    fetchData(NetworkTools.TOP_RATED_URL,currentPage+"");
+
+            if(dy>0){
+
+                int totalCount = layoutManager.getItemCount();
+                int currentlyVisible = layoutManager.getChildCount();
+                int lastVisible = layoutManager.findLastVisibleItemPosition();
+
+                if((lastVisible+currentlyVisible)>=totalCount) {
+                    loading = true;
+                    loadingIndicator.setVisibility(View.VISIBLE);
+                    currentPage++;
+                    if (popular) {
+                        fetchData(NetworkTools.POPULAR_URL, currentPage + "");
+                    } else {
+                        fetchData(NetworkTools.TOP_RATED_URL, currentPage + "");
+                    }
                 }
             }
 
@@ -163,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void loadingDone(){
             loading=false;
+            loadingIndicator.setVisibility(View.GONE);
         }
 
         public void reset(){
