@@ -59,4 +59,26 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
+    public void addData(JSONObject[] newData){
+        if(movieDetails==null){
+            movieDetails = newData;
+            notifyDataSetChanged();
+            return;
+        }
+        JSONObject[] newArray = new JSONObject[movieDetails.length+newData.length];
+        for(int i=0;i<movieDetails.length;i++){
+            newArray[i]=movieDetails[i];
+        }
+        for(int i=movieDetails.length;i<(movieDetails.length+newData.length);i++){
+            newArray[i]=newData[i-movieDetails.length];
+        }
+        movieDetails = newArray;
+        notifyDataSetChanged();
+    }
+
+    public void clearData(){
+        movieDetails=null;
+        notifyDataSetChanged();
+    }
+
 }

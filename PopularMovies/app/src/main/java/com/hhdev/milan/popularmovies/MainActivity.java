@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     ProgressBar loadingIndicator;
+    GridLayoutManager layoutManager;
+    LoadMoreListener listener;
 
     boolean popular;
 
@@ -31,9 +33,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.main_recyclerview);
         loadingIndicator = (ProgressBar) findViewById(R.id.main_loading);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        layoutManager = new GridLayoutManager(this,2);
+        listener = new LoadMoreListener();
+
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new MovieAdapter());
-        fetchData(NetworkTools.POPULAR_URL);
+        recyclerView.addOnScrollListener(listener);
+
+        fetchData(NetworkTools.POPULAR_URL,1+"");
         popular = true;
     }
 
@@ -43,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void fetchData(String url){
-        new FetchDataTask().execute(url);
+    public void fetchData(String url,String page){
+        new FetchDataTask().execute(url,page);
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
@@ -67,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
                     if(popular) return true;
                     else {
                         popular = true;
-                        fetchData(NetworkTools.POPULAR_URL);
+                        ((MovieAdapter)recyclerView.getAdapter()).clearData();
+                        listener.reset();
+                        fetchData(NetworkTools.POPULAR_URL,1+"");
                         setTitle(getString(R.string.popular));
                         return true;
                     }
@@ -75,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
                     if(!popular) return true;
                     else {
                         popular = false;
-                        fetchData(NetworkTools.TOP_RATED_URL);
+                        ((MovieAdapter)recyclerView.getAdapter()).clearData();
+                        listener.reset();
+                        fetchData(NetworkTools.TOP_RATED_URL,1+"");
                         setTitle(getString(R.string.top_rated));
                         return true;
                     }
@@ -94,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(JSONObject[] data){
             loadingIndicator.setVisibility(View.GONE);
-            ((MovieAdapter)recyclerView.getAdapter()).swapData(data);
+            ((MovieAdapter)recyclerView.getAdapter()).addData(data);
+            listener.loadingDone();
             recyclerView.setVisibility(View.VISIBLE);
         }
 
@@ -103,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
             try{
-                String jsonResponse = NetworkTools.getResponseFromHTTP(NetworkTools.buildUrl(params[0], getString(R.string.themoviedb_key_v3))); //insert your own key here
+                String jsonResponse = NetworkTools.getResponseFromHTTP(NetworkTools.buildUrl(params[0], getString(R.string.themoviedb_key_v3),params[1])); //insert your own key here
                 JSONObject jsonObject = new JSONObject(jsonResponse);
                 JSONArray results = jsonObject.getJSONArray("results");
                 JSONObject[] movieDetails = new JSONObject[results.length()];
@@ -119,5 +131,43 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public class LoadMoreListener extends RecyclerView.OnScrollListener{
+
+        int currentPage;
+        boolean loading;
+
+        public LoadMoreListener(){
+            currentPage = 1;
+            loading = false;
+        }
+
+        public void onScrolled(RecyclerView recyclerView,int dx,int dy){
+
+            if(loading){
+                return;
+            }
+            if(!recyclerView.canScrollVertically(1)){
+                loading = true;
+                loadingIndicator.setVisibility(View.VISIBLE);
+                currentPage++;
+                if(popular){
+                    fetchData(NetworkTools.POPULAR_URL,currentPage+"");
+                } else{
+                    fetchData(NetworkTools.TOP_RATED_URL,currentPage+"");
+                }
+            }
+
+        }
+
+        public void loadingDone(){
+            loading=false;
+        }
+
+        public void reset(){
+            currentPage = 1;
+            loading = false;
+        }
     }
 }
