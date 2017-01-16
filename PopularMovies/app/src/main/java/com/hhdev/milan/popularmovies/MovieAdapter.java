@@ -2,7 +2,6 @@ package com.hhdev.milan.popularmovies;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import org.json.JSONObject;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
 
-    public JSONObject[] movieDetails;
+    private JSONObject[] movieDetails;
     private ItemListener itemListener;
 
     public MovieAdapter(ItemListener itemListener) {
@@ -38,7 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public interface ItemListener{
-        public void onItemClick(JSONObject data);
+        void onItemClick(JSONObject data);
     }
 
     @Override
@@ -56,7 +55,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             Context context = viewHolder.poster.getContext();
             viewHolder.poster.setTag(movieDetails[pos]);
             viewHolder.poster.setOnClickListener(viewHolder);
-            Picasso.with(context).load(url).into(viewHolder.poster);
+            Picasso.with(context).load(url).placeholder(R.drawable.placeholder).into(viewHolder.poster);
+            System.out.println(url);
         } catch(Exception e){
             e.printStackTrace();
         }

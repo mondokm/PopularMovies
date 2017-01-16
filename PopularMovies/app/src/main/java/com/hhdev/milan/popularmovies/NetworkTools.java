@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-public class NetworkTools {
+class NetworkTools {
 
     public static final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular";
     public static final String TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated";
@@ -25,9 +25,9 @@ public class NetworkTools {
 
 
     public static String getResponseFromHTTP(URL url) throws IOException{
-        HttpURLConnection urlconnection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try{
-            InputStream inputStream = urlconnection.getInputStream();
+            InputStream inputStream = urlConnection.getInputStream();
             Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
 
             boolean hasInput = scanner.hasNext();
@@ -37,7 +37,7 @@ public class NetworkTools {
                 return null;
             }
         } finally{
-            urlconnection.disconnect();
+            urlConnection.disconnect();
         }
     }
 

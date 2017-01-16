@@ -19,13 +19,13 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    ProgressBar loadingIndicator;
-    GridLayoutManager layoutManager;
-    LoadMoreListener listener;
-    ImageListener imageListener;
+    private RecyclerView recyclerView;
+    private ProgressBar loadingIndicator;
+    private GridLayoutManager layoutManager;
+    private LoadMoreListener listener;
+    private ImageListener imageListener;
 
-    boolean popular;
+    private boolean popular;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void fetchData(String url,String page){
+    private void fetchData(String url, String page){
         new FetchDataTask().execute(url,page);
     }
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class PopupMenuItemClickListener implements PopupMenu.OnMenuItemClickListener{
+    private class PopupMenuItemClickListener implements PopupMenu.OnMenuItemClickListener{
         public boolean onMenuItemClick(MenuItem item){
             switch (item.getItemId()){
                 case R.id.sort_menu_popular:
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class FetchDataTask extends AsyncTask<String,Void,JSONObject[]>{
+    private class FetchDataTask extends AsyncTask<String,Void,JSONObject[]>{
 
         protected void onPreExecute(){
             super.onPreExecute();
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     movieDetails[i] = results.getJSONObject(i);
                 }
                 return movieDetails;
-                
+
             }catch (Exception e){
                 e.printStackTrace();
                 return null;
