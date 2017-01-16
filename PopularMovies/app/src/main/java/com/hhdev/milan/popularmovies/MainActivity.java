@@ -1,5 +1,6 @@
 package com.hhdev.milan.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar loadingIndicator;
     GridLayoutManager layoutManager;
     LoadMoreListener listener;
+    ImageListener imageListener;
 
     boolean popular;
 
@@ -35,9 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         layoutManager = new GridLayoutManager(this,2);
         listener = new LoadMoreListener();
+        imageListener = new ImageListener();
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new MovieAdapter());
+        recyclerView.setAdapter(new MovieAdapter(imageListener));
         recyclerView.addOnScrollListener(listener);
 
         fetchData(NetworkTools.POPULAR_URL,1+"");
@@ -52,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void fetchData(String url,String page){
         new FetchDataTask().execute(url,page);
+    }
+
+    public class ImageListener implements MovieAdapter.ItemListener{
+        @Override
+        public void onItemClick(JSONObject data) {
+            Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+            intent.putExtra(Intent.EXTRA_TEXT,data.toString());
+            startActivity(intent);
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item){

@@ -16,8 +16,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
 
     public JSONObject[] movieDetails;
+    private ItemListener itemListener;
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder{
+    public MovieAdapter(ItemListener itemListener) {
+        this.itemListener = itemListener;
+    }
+
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView poster;
 
         public MovieViewHolder(View itemView) {
@@ -25,6 +30,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
             poster = (ImageView) itemView.findViewById(R.id.movie_image);
         }
+
+        public void onClick(View v){
+            itemListener.onItemClick((JSONObject)poster.getTag());
+        }
+
+    }
+
+    public interface ItemListener{
+        public void onItemClick(JSONObject data);
     }
 
     @Override
@@ -41,7 +55,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             String url = NetworkTools.THE_MOVIE_DB_IMG_URL + movieDetails[pos].getString("poster_path");
             Context context = viewHolder.poster.getContext();
             viewHolder.poster.setTag(movieDetails[pos]);
-            Log.d("DEBUG",url);
+            viewHolder.poster.setOnClickListener(viewHolder);
             Picasso.with(context).load(url).into(viewHolder.poster);
         } catch(Exception e){
             e.printStackTrace();
