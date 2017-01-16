@@ -6,4 +6,6 @@
     <string name="top_rated">Highest rated Movies</string>
     <string name="detail_title">Details</string>
     <string name="vote_average">/10</string>
+    <string name="detail_release">Released:</string>
+    <string name="detail_rating">Rating:</string>
 </resources>
