@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             try{
                 String jsonResponse = NetworkTools.getResponseFromHTTP(NetworkTools.buildUrl(params[0], getString(R.string.themoviedb_key_v3),params[1])); //insert your own key here
                 JSONObject jsonObject = new JSONObject(jsonResponse);
-                JSONArray results = jsonObject.getJSONArray("results");
+                JSONArray results = jsonObject.getJSONArray(NetworkTools.RESULTS);
                 JSONObject[] movieDetails = new JSONObject[results.length()];
                 for(int i = 0;i<results.length();i++){
                     movieDetails[i] = results.getJSONObject(i);

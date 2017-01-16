@@ -52,7 +52,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public void onBindViewHolder(MovieViewHolder viewHolder, int pos){
         try{
-            String url = NetworkTools.THE_MOVIE_DB_IMG_URL + movieDetails[pos].getString("poster_path");
+            String url = NetworkTools.THE_MOVIE_DB_IMG_URL + movieDetails[pos].getString(NetworkTools.POSTER_PATH);
             Context context = viewHolder.poster.getContext();
             viewHolder.poster.setTag(movieDetails[pos]);
             viewHolder.poster.setOnClickListener(viewHolder);
