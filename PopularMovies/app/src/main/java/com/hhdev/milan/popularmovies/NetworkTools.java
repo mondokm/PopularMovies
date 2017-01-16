@@ -19,6 +19,8 @@ public class NetworkTools {
     public static final String VOTE_AVERAGE = "vote_average";
     public static final String RELEASE_DATE = "release_date";
     public static final String POSTER_PATH = "poster_path";
+    public static final String API_KEY = "api_key";
+    public static final String PAGE = "page";
 
 
 
@@ -41,8 +43,8 @@ public class NetworkTools {
 
     public static URL buildUrl(String baseUrl, String key, String page){
         Uri builtUri = Uri.parse(baseUrl).buildUpon()
-                .appendQueryParameter("api_key", key)
-                .appendQueryParameter("page", page)
+                .appendQueryParameter(NetworkTools.API_KEY, key)
+                .appendQueryParameter(NetworkTools.PAGE, page)
                 .build();
 
         URL url = null;
