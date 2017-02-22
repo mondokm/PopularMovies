@@ -1,6 +1,6 @@
 app/src/main/res/values/keys.xml
 *.iml
-.gradle
+#.gradle
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries

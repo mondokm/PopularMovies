@@ -56,7 +56,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             viewHolder.poster.setTag(movieDetails[pos]);
             viewHolder.poster.setOnClickListener(viewHolder);
             Picasso.with(context).load(url).placeholder(R.drawable.placeholder).into(viewHolder.poster);
-            System.out.println(url);
         } catch(Exception e){
             e.printStackTrace();
         }
