@@ -50,6 +50,13 @@
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         android:id="@+id/rating"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/review_button"
+                        android:text="@string/review_button_text"
+                        android:onClick="onReviewButtonClick"/>
                 </LinearLayout>
 
             </LinearLayout>

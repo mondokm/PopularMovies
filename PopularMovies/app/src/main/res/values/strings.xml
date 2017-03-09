@@ -8,4 +8,6 @@
     <string name="vote_average">/10</string>
     <string name="detail_release">Released:</string>
     <string name="detail_rating">Rating:</string>
+    <string name="review_button_text">See reviews</string>
+    <string name="reviews">Reviews</string>
 </resources>
