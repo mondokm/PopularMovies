@@ -10,4 +10,5 @@
     <string name="detail_rating">Rating:</string>
     <string name="review_button_text">See reviews</string>
     <string name="reviews">Reviews</string>
+    <string name="no_reviews">There are no reviews for this movie.</string>
 </resources>

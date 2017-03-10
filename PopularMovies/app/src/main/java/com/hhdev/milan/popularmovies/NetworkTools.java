@@ -22,6 +22,8 @@ class NetworkTools {
     public static final String OVERVIEW = "overview";
     public static final String TITLE = "title";
     public static final String REVIEWS = "reviews";
+    public static final String AUTHOR = "author";
+    public static final String CONTENT = "content";
     public static final String VOTE_AVERAGE = "vote_average";
     public static final String RELEASE_DATE = "release_date";
     public static final String POSTER_PATH = "poster_path";
