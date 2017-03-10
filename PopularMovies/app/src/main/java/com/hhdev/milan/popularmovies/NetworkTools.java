@@ -2,6 +2,10 @@ package com.hhdev.milan.popularmovies;
 
 import android.net.Uri;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -58,6 +62,21 @@ class NetworkTools {
         }
 
         return url;
+    }
+
+    public static JSONObject[] responseToArray(String jsonResponse){
+        JSONObject[] details = null;
+        try {
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            JSONArray results = jsonObject.getJSONArray(NetworkTools.RESULTS);
+            details = new JSONObject[results.length()];
+            for(int i = 0;i<results.length();i++){
+                details[i] = results.getJSONObject(i);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return details;
     }
 
 }

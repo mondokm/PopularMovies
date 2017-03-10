@@ -5,7 +5,9 @@ import android.view.View;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-class FetchDataTask extends AsyncTask<String,Void,JSONObject[]> {
+import java.io.IOException;
+
+class FetchDataTask extends AsyncTask<String,Void,String> {
 
     FinishedListener finished;
     String key;
@@ -16,36 +18,27 @@ class FetchDataTask extends AsyncTask<String,Void,JSONObject[]> {
     }
 
     public interface FinishedListener{
-        void taskFinished(JSONObject[] data);
+        void taskFinished(String response);
     }
 
     protected void onPreExecute(){
         super.onPreExecute();
     }
 
-    protected void onPostExecute(JSONObject[] data){
-        finished.taskFinished(data);
+    protected void onPostExecute(String response){
+        finished.taskFinished(response);
     }
 
-    protected JSONObject[] doInBackground(String[] params){
-        this.finished = finished;
+    protected String doInBackground(String[] params){
         if(params.length == 0){
             return null;
         }
-        try{
-            String jsonResponse = NetworkTools.getResponseFromHTTP(NetworkTools.buildUrl(params[0], key,params[1])); //insert your own key here
-            JSONObject jsonObject = new JSONObject(jsonResponse);
-            JSONArray results = jsonObject.getJSONArray(NetworkTools.RESULTS);
-            JSONObject[] movieDetails = new JSONObject[results.length()];
-            for(int i = 0;i<results.length();i++){
-                movieDetails[i] = results.getJSONObject(i);
-            }
-            return movieDetails;
-
-        }catch (Exception e){
+        try {
+            return NetworkTools.getResponseFromHTTP(NetworkTools.buildUrl(params[0], key,params[1])); //insert your own key here
+        } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
 
     }
 

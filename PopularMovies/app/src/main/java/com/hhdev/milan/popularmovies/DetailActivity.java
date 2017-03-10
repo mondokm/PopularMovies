@@ -57,8 +57,8 @@ public class DetailActivity extends AppCompatActivity{
     }
 
     public class TaskListener implements com.hhdev.milan.popularmovies.FetchDataTask.FinishedListener{
-        public void taskFinished(JSONObject[] data){
-            seeReviews(data);
+        public void taskFinished(String response){
+            seeReviews(NetworkTools.responseToArray(response));
         }
     }
 

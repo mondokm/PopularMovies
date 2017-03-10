@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class TaskListener implements com.hhdev.milan.popularmovies.FetchDataTask.FinishedListener{
-        public void taskFinished(JSONObject[] data){
-            ((MovieAdapter)recyclerView.getAdapter()).addData(data);
+        public void taskFinished(String response){
+            ((MovieAdapter)recyclerView.getAdapter()).addData(NetworkTools.responseToArray(response));
             listener.loadingDone();
             recyclerView.setVisibility(View.VISIBLE);
         }
