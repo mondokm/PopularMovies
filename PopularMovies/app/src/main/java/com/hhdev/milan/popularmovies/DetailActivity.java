@@ -91,7 +91,7 @@ public class DetailActivity extends AppCompatActivity{
     }
 
     public void seeReviews(JSONObject[] data){
-        
+
     }
 
 }

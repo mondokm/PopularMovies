@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchData(String url, String page){
-        new FetchDataTask().execute(url,page);
+        loadingIndicator.setVisibility(View.VISIBLE);
+        new FetchDataTask(new TaskListener(),getString(R.string.themoviedb_key_v3)).execute(url,page);
     }
 
     public class ImageListener implements MovieAdapter.ItemListener{
@@ -108,40 +109,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class FetchDataTask extends AsyncTask<String,Void,JSONObject[]>{
-
-        protected void onPreExecute(){
-            super.onPreExecute();
-            loadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        protected void onPostExecute(JSONObject[] data){
+    public class TaskListener implements com.hhdev.milan.popularmovies.FetchDataTask.FinishedListener{
+        public void taskFinished(JSONObject[] data){
             ((MovieAdapter)recyclerView.getAdapter()).addData(data);
             listener.loadingDone();
             recyclerView.setVisibility(View.VISIBLE);
         }
-
-        protected JSONObject[] doInBackground(String[] params){
-            if(params.length == 0){
-                return null;
-            }
-            try{
-                String jsonResponse = NetworkTools.getResponseFromHTTP(NetworkTools.buildUrl(params[0], getString(R.string.themoviedb_key_v3),params[1])); //insert your own key here
-                JSONObject jsonObject = new JSONObject(jsonResponse);
-                JSONArray results = jsonObject.getJSONArray(NetworkTools.RESULTS);
-                JSONObject[] movieDetails = new JSONObject[results.length()];
-                for(int i = 0;i<results.length();i++){
-                    movieDetails[i] = results.getJSONObject(i);
-                }
-                return movieDetails;
-
-            }catch (Exception e){
-                e.printStackTrace();
-                return null;
-            }
-
-        }
-
     }
 
     public class LoadMoreListener extends RecyclerView.OnScrollListener{
