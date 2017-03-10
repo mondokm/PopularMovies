@@ -50,44 +50,16 @@ public class DetailActivity extends AppCompatActivity{
 
     public void onReviewButtonClick(View v){
         try {
-            new FetchReviewsTask().execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.REVIEWS,1+"");
+            new FetchDataTask(new TaskListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.REVIEWS,1+"");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private class FetchReviewsTask extends AsyncTask<String,Void,JSONObject[]> {
-
-        protected void onPreExecute(){
-            super.onPreExecute();
-
+    public class TaskListener implements com.hhdev.milan.popularmovies.FetchDataTask.FinishedListener{
+        public void taskFinished(JSONObject[] data){
+            seeReviews(data);
         }
-
-        protected void onPostExecute(JSONObject[] data){
-                seeReviews(data);
-        }
-
-        protected JSONObject[] doInBackground(String[] params){
-            if(params.length == 0){
-                return null;
-            }
-            try{
-                String jsonResponse = NetworkTools.getResponseFromHTTP(NetworkTools.buildUrl(params[0], getString(R.string.themoviedb_key_v3),params[1])); //insert your own key here
-                JSONObject jsonObject = new JSONObject(jsonResponse);
-                JSONArray results = jsonObject.getJSONArray(NetworkTools.RESULTS);
-                JSONObject[] reviews = new JSONObject[results.length()];
-                for(int i = 0;i<results.length();i++){
-                    reviews[i] = results.getJSONObject(i);
-                }
-                return reviews;
-
-            }catch (Exception e){
-                e.printStackTrace();
-                return null;
-            }
-
-        }
-
     }
 
     public void seeReviews(JSONObject[] data){
