@@ -26,7 +26,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title;
-        ImageView icon;
         CardView card;
 
         public TrailerViewHolder(View itemView) {
@@ -34,7 +33,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
             title = (TextView) itemView.findViewById(R.id.trailer_title);
             card = (CardView) itemView.findViewById(R.id.trailer_card);
-            icon = (ImageView) itemView.findViewById(R.id.play_icon);
 
         }
 
@@ -63,8 +61,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
             viewHolder.title.setText(trailers[pos].getString(NetworkTools.NAME));
             viewHolder.title.setOnClickListener(viewHolder);
             viewHolder.title.setTag(trailers[pos]);
-            viewHolder.icon.setOnClickListener(viewHolder);
-            viewHolder.icon.setTag(trailers[pos]);
             viewHolder.card.setOnClickListener(viewHolder);
             viewHolder.card.setTag(trailers[pos]);
         } catch(Exception e){
