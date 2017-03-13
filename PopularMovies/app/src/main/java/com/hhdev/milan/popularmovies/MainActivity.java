@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     if(mode==MODE_FAVORITE) return true;
                     else {
                         mode=MODE_FAVORITE;
+                        setTitle(getString(R.string.menu_favorite));
                         loadFavorites();
                     }
                  default:

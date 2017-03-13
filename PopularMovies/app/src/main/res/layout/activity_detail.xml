@@ -52,17 +52,19 @@
                         android:id="@+id/rating"/>
 
                     <Button
-                        android:layout_width="120dp"
+                        android:layout_width="@dimen/button_width"
                         android:layout_height="wrap_content"
                         android:id="@+id/review_button"
                         android:text="@string/review_button_text"
-                        android:onClick="onReviewButtonClick"/>
+                        android:onClick="onReviewButtonClick"
+                        android:layout_gravity="bottom"/>
 
                     <Button
-                        android:layout_width="120dp"
+                        android:layout_width="@dimen/button_width"
                         android:layout_height="wrap_content"
                         android:id="@+id/favorite_button"
                         android:onClick="onFavoriteButtonClick"
+                        android:layout_gravity="bottom"
                         android:text="@string/favorite_button_text"/>
                 </LinearLayout>
 
@@ -86,7 +88,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/trailer_recyclerview"/>
+                android:id="@+id/trailer_recyclerview"
+                android:layout_marginBottom="12dp"/>
 
     </LinearLayout>
 </ScrollView>
