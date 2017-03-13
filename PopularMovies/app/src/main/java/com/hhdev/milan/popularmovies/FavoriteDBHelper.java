@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class FavoriteDBHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "favorites.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
 
     public FavoriteDBHelper(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -15,9 +15,10 @@ public class FavoriteDBHelper extends SQLiteOpenHelper{
 
     public void onCreate(SQLiteDatabase sqLiteDatabase){
         final String SQL_CREATE_FAVORITES_TABLE = "CREATE TABLE " +
-                FavoriteContract.Favorites.TABLE_NAME + " (" +
+                FavoriteContract.Favorites.TABLE_NAME + " ( " +
                 FavoriteContract.Favorites._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                FavoriteContract.Favorites.COLUMN_DATA + " TEXT NOT NULL + " +
+                FavoriteContract.Favorites.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
+                FavoriteContract.Favorites.COLUMN_DATA + " TEXT NOT NULL " +
                 ");";
         sqLiteDatabase.execSQL(SQL_CREATE_FAVORITES_TABLE);
     }

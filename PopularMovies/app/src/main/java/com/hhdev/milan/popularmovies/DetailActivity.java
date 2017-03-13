@@ -1,6 +1,9 @@
 package com.hhdev.milan.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Network;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,6 +29,9 @@ public class DetailActivity extends AppCompatActivity{
     JSONObject data;
     RecyclerView trailersView;
     TrailerAdapter trailerAdapter;
+    SQLiteDatabase sqLiteDatabase;
+    TextView favoriteButton;
+    boolean favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +39,36 @@ public class DetailActivity extends AppCompatActivity{
         setContentView(R.layout.activity_detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        favoriteButton = (TextView) findViewById(R.id.favorite_button);
+
+        favorite = false;
+
         Intent intent = getIntent();
         try {
             data = new JSONObject(intent.getExtras().getString(Intent.EXTRA_TEXT));
+
             setTitle(data.getString(NetworkTools.TITLE));
             ((TextView) findViewById(R.id.overview)).setText(data.getString(NetworkTools.OVERVIEW));
             ((TextView) findViewById(R.id.rating)).setText(data.getString(NetworkTools.VOTE_AVERAGE)+getString(R.string.vote_average));
             ((TextView) findViewById(R.id.release_date)).setText(data.getString(NetworkTools.RELEASE_DATE).substring(0,4));
             Picasso.with(this).load(NetworkTools.THE_MOVIE_DB_IMG_URL+data.getString(NetworkTools.POSTER_PATH)).into((ImageView)findViewById(R.id.detail_poster));
             new FetchDataTask(new TrailerListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.VIDEOS,1+"");
+
+            FavoriteDBHelper helper = new FavoriteDBHelper(this);
+            sqLiteDatabase = helper.getWritableDatabase();
+
+            String query = "SELECT "+ FavoriteContract.Favorites.COLUMN_MOVIE_ID+" FROM "+ FavoriteContract.Favorites.TABLE_NAME+" WHERE "+ FavoriteContract.Favorites.COLUMN_MOVIE_ID+" = "+data.getString(NetworkTools.ID);
+            Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+            if(cursor.getCount()>0) {
+                favorite = true;
+                favoriteButton.setText(getString(R.string.unfavorite));
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
+
+
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -62,6 +86,32 @@ public class DetailActivity extends AppCompatActivity{
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void onFavoriteButtonClick(View v){
+        if(!favorite){
+            try{
+                ContentValues cv = new ContentValues();
+                cv.put(FavoriteContract.Favorites.COLUMN_DATA, data.toString());
+                cv.put(FavoriteContract.Favorites.COLUMN_MOVIE_ID,data.getString(NetworkTools.ID));
+                sqLiteDatabase.insert(FavoriteContract.Favorites.TABLE_NAME,null,cv);
+                favorite=true;
+                favoriteButton.setText(getString(R.string.unfavorite));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+        } else{
+            try{
+                sqLiteDatabase.delete(FavoriteContract.Favorites.TABLE_NAME, FavoriteContract.Favorites.COLUMN_MOVIE_ID+"="+data.getString(NetworkTools.ID),null);
+                favorite=false;
+                favoriteButton.setText(getString(R.string.favorite_button_text));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     public class TaskListener implements FetchDataTask.FinishedListener{

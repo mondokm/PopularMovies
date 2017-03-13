@@ -2,6 +2,7 @@
     <string name="app_name">Popular Movies</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_sort">Change order</string>
+    <string name="menu_favorite">Favorites</string>
     <string name="popular">Popular Movies</string>
     <string name="top_rated">Highest rated Movies</string>
     <string name="detail_title">Details</string>
@@ -11,5 +12,8 @@
     <string name="review_button_text">See reviews</string>
     <string name="reviews">Reviews</string>
     <string name="no_reviews">There are no reviews for this movie.</string>
+    <string name="no_favorites">You have no favorites.</string>
     <string name="trailers">Trailers:</string>
+    <string name="favorite_button_text">Mark as favorite</string>
+    <string name="unfavorite">Remove from favorites</string>
 </resources>

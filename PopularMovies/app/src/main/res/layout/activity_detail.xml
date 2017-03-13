@@ -52,11 +52,18 @@
                         android:id="@+id/rating"/>
 
                     <Button
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/review_button"
                         android:text="@string/review_button_text"
                         android:onClick="onReviewButtonClick"/>
+
+                    <Button
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/favorite_button"
+                        android:onClick="onFavoriteButtonClick"
+                        android:text="@string/favorite_button_text"/>
                 </LinearLayout>
 
             </LinearLayout>

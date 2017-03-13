@@ -1,6 +1,8 @@
 package com.hhdev.milan.popularmovies;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,9 +27,14 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager layoutManager;
     private LoadMoreListener listener;
     private ImageListener imageListener;
+    private SQLiteDatabase sqLiteDatabase;
+    private MovieAdapter movieAdapter;
 
-    private boolean popular;
+    private static final int MODE_POPULAR = 0;
+    private static final int MODE_TOP_RATED = 1;
+    private static final int MODE_FAVORITE = 2;
 
+    int mode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +46,23 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new GridLayoutManager(this,2);
         listener = new LoadMoreListener();
         imageListener = new ImageListener();
+        movieAdapter = new MovieAdapter(imageListener);
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new MovieAdapter(imageListener));
+        recyclerView.setAdapter(movieAdapter);
         recyclerView.addOnScrollListener(listener);
 
         fetchData(NetworkTools.POPULAR_URL,1+"");
-        popular = true;
+        mode=MODE_POPULAR;
+
+        setupDB();
+    }
+
+    public void onResume(){
+        super.onResume();
+        if(mode==MODE_FAVORITE){
+            loadFavorites();
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -67,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void setupDB(){
+        FavoriteDBHelper dbHelper = new FavoriteDBHelper(this);
+        sqLiteDatabase = dbHelper.getReadableDatabase();
+    }
+
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.main_menu_sort:
@@ -84,24 +107,32 @@ public class MainActivity extends AppCompatActivity {
         public boolean onMenuItemClick(MenuItem item){
             switch (item.getItemId()){
                 case R.id.sort_menu_popular:
-                    if(popular) return true;
+                    if(mode==MODE_POPULAR) return true;
                     else {
-                        popular = true;
-                        ((MovieAdapter)recyclerView.getAdapter()).clearData();
+                        mode=MODE_POPULAR;
+                        ((TextView)findViewById(R.id.no_favorites_textview)).setVisibility(View.GONE);
+                        movieAdapter.clearData();
                         listener.reset();
                         fetchData(NetworkTools.POPULAR_URL,1+"");
                         setTitle(getString(R.string.popular));
                         return true;
                     }
                 case R.id.sort_menu_top_rated:
-                    if(!popular) return true;
+                    if(mode==MODE_TOP_RATED) return true;
                     else {
-                        popular = false;
-                        ((MovieAdapter)recyclerView.getAdapter()).clearData();
+                        mode=MODE_TOP_RATED;
+                        ((TextView)findViewById(R.id.no_favorites_textview)).setVisibility(View.GONE);
+                        movieAdapter.clearData();
                         listener.reset();
                         fetchData(NetworkTools.TOP_RATED_URL,1+"");
                         setTitle(getString(R.string.top_rated));
                         return true;
+                    }
+                case R.id.sort_menu_favorite:
+                    if(mode==MODE_FAVORITE) return true;
+                    else {
+                        mode=MODE_FAVORITE;
+                        loadFavorites();
                     }
                  default:
                      return false;
@@ -111,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class TaskListener implements com.hhdev.milan.popularmovies.FetchDataTask.FinishedListener{
         public void taskFinished(String response){
-            ((MovieAdapter)recyclerView.getAdapter()).addData(NetworkTools.responseToArray(response));
+            movieAdapter.addData(NetworkTools.responseToArray(response));
             listener.loadingDone();
             recyclerView.setVisibility(View.VISIBLE);
         }
@@ -133,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if(dy>0){
+            if(dy>0 && mode!=MODE_FAVORITE){
 
                 int totalCount = layoutManager.getItemCount();
                 int currentlyVisible = layoutManager.getChildCount();
@@ -143,10 +174,11 @@ public class MainActivity extends AppCompatActivity {
                     loading = true;
                     loadingIndicator.setVisibility(View.VISIBLE);
                     currentPage++;
-                    if (popular) {
-                        fetchData(NetworkTools.POPULAR_URL, currentPage + "");
-                    } else {
-                        fetchData(NetworkTools.TOP_RATED_URL, currentPage + "");
+                    switch (mode) {
+                        case MODE_POPULAR:
+                            fetchData(NetworkTools.POPULAR_URL, currentPage + "");
+                        case MODE_TOP_RATED:
+                            fetchData(NetworkTools.TOP_RATED_URL, currentPage + "");
                     }
                 }
             }
@@ -162,5 +194,34 @@ public class MainActivity extends AppCompatActivity {
             currentPage = 1;
             loading = false;
         }
+    }
+
+    public Cursor getFavorites(){
+        String[] columns = {FavoriteContract.Favorites.COLUMN_DATA};
+        return sqLiteDatabase.query(
+                FavoriteContract.Favorites.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                FavoriteContract.Favorites._ID);
+
+    }
+
+    public void loadFavorites(){
+        Cursor cursor = getFavorites();
+        JSONObject[] movies = new JSONObject[cursor.getCount()];
+        for(int i=0;i<cursor.getCount();i++){
+            try{
+                cursor.moveToPosition(i);
+                movies[i]= new JSONObject(cursor.getString(cursor.getColumnIndex(FavoriteContract.Favorites.COLUMN_DATA)));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        if(movies.length==0) ((TextView)findViewById(R.id.no_favorites_textview)).setVisibility(View.VISIBLE);
+        movieAdapter.clearData();
+        movieAdapter.addData(movies);
     }
 }
