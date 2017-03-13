@@ -1,9 +1,6 @@
 package com.hhdev.milan.popularmovies;
 
 import android.os.AsyncTask;
-import android.view.View;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 

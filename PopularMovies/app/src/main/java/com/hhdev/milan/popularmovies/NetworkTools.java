@@ -30,7 +30,11 @@ class NetworkTools {
     public static final String API_KEY = "api_key";
     public static final String PAGE = "page";
     public static final String ID = "id";
-
+    public static final String NAME = "name";
+    public static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch";
+    public static final String YOUTUBE_V = "v";
+    public static final String KEY = "key";
+    public static final String VIDEOS = "videos";
 
 
     public static String getResponseFromHTTP(URL url) throws IOException{
