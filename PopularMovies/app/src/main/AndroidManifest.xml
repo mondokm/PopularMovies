@@ -22,19 +22,10 @@
         <activity android:name=".DetailActivity"
             android:parentActivityName=".MainActivity"
             android:label="@string/detail_title"
-            android:configChanges="orientation|screenSize"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
-        </activity>
-        <activity android:name=".ReviewActivity"
-            android:parentActivityName=".DetailActivity"
-            android:label="@string/reviews"
-            android:configChanges="orientation|screenSize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DetailActivity" />
         </activity>
     </application>
 
