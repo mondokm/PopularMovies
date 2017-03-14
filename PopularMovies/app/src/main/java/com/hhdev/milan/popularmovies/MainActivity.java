@@ -1,14 +1,18 @@
 package com.hhdev.milan.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.main_recyclerview);
         loadingIndicator = (ProgressBar) findViewById(R.id.main_loading);
 
-        layoutManager = new GridLayoutManager(this,2);
+        layoutManager = new GridLayoutManager(this,calculateNoOfColumns(this));
         listener = new LoadMoreListener();
         imageListener = new ImageListener();
         movieAdapter = new MovieAdapter(imageListener);
@@ -63,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
         if(mode==MODE_FAVORITE){
             loadFavorites();
         }
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        int visible = ((GridLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        recyclerView.setLayoutManager(new GridLayoutManager(this,calculateNoOfColumns(this)));
+        recyclerView.getLayoutManager().scrollToPosition(visible);
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -155,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         boolean loading;
 
         public LoadMoreListener(){
-            currentPage = 1;
+            currentPage = 2;
             loading = false;
         }
 
@@ -171,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 int currentlyVisible = layoutManager.getChildCount();
                 int lastVisible = layoutManager.findLastVisibleItemPosition();
 
-                if((lastVisible+currentlyVisible)>=totalCount) {
+                if((lastVisible+currentlyVisible*2)>=totalCount) {
                     loading = true;
                     loadingIndicator.setVisibility(View.VISIBLE);
                     currentPage++;
@@ -224,5 +236,12 @@ public class MainActivity extends AppCompatActivity {
         if(movies.length==0) ((TextView)findViewById(R.id.no_favorites_textview)).setVisibility(View.VISIBLE);
         movieAdapter.clearData();
         movieAdapter.addData(movies);
+    }
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / 180);
+        return noOfColumns;
     }
 }
