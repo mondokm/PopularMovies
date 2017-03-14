@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.view.View;
 
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.main_recyclerview);
         loadingIndicator = (ProgressBar) findViewById(R.id.main_loading);
 
-        layoutManager = new GridLayoutManager(this,calculateNoOfColumns(this));
+        layoutManager = new GridLayoutManager(this,NetworkTools.calculateNoOfColumns(this));
         listener = new LoadMoreListener();
         imageListener = new ImageListener();
         movieAdapter = new MovieAdapter(imageListener);
@@ -58,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addOnScrollListener(listener);
 
         fetchData(NetworkTools.POPULAR_URL,1+"");
-        mode=MODE_POPULAR;
 
+        mode=MODE_POPULAR;
         setupDB();
+
     }
 
     public void onResume(){
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
 
         int visible = ((GridLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-        recyclerView.setLayoutManager(new GridLayoutManager(this,calculateNoOfColumns(this)));
+        recyclerView.setLayoutManager(new GridLayoutManager(this,NetworkTools.calculateNoOfColumns(this)));
         recyclerView.getLayoutManager().scrollToPosition(visible);
     }
 
@@ -85,8 +89,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchData(String url, String page){
-        loadingIndicator.setVisibility(View.VISIBLE);
-        new FetchDataTask(new TaskListener(),getString(R.string.themoviedb_key_v3)).execute(url,page);
+        if(NetworkTools.isNetworkAvailable(this)){
+            loadingIndicator.setVisibility(View.VISIBLE);
+            new FetchDataTask(new TaskListener(),getString(R.string.themoviedb_key_v3)).execute(url,page);
+        } else {
+            Toast.makeText(this,getString(R.string.no_internet),Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public class ImageListener implements MovieAdapter.ItemListener{
@@ -239,12 +248,7 @@ public class MainActivity extends AppCompatActivity {
         movieAdapter.addData(movies);
     }
 
-    public static int calculateNoOfColumns(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int noOfColumns = (int) (dpWidth / 180);
-        if(noOfColumns>6) noOfColumns=6;
-        if(noOfColumns<2) noOfColumns=2;
-        return noOfColumns;
-    }
+
+
+
 }

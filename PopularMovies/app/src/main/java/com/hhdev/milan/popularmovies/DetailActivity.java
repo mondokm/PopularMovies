@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -56,8 +57,12 @@ public class DetailActivity extends AppCompatActivity{
             ((TextView) findViewById(R.id.release_date)).setText(data.getString(NetworkTools.RELEASE_DATE).substring(0,4));
             Picasso.with(this).load(NetworkTools.THE_MOVIE_DB_IMG_URL+data.getString(NetworkTools.POSTER_PATH)).into((ImageView)findViewById(R.id.detail_poster));
 
-            new FetchDataTask(new TrailerListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.VIDEOS,1+"");
-            new FetchDataTask(new TaskListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.REVIEWS,1+"");
+            if(NetworkTools.isNetworkAvailable(this)){
+                new FetchDataTask(new TrailerListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.VIDEOS,1+"");
+                new FetchDataTask(new TaskListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.REVIEWS,1+"");
+            } else {
+                Toast.makeText(this,getString(R.string.no_internet),Toast.LENGTH_LONG).show();
+            }
 
             FavoriteDBHelper helper = new FavoriteDBHelper(this);
             sqLiteDatabase = helper.getWritableDatabase();

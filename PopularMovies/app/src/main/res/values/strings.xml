@@ -16,4 +16,5 @@
     <string name="trailers">Trailers:</string>
     <string name="favorite_button_text">Mark as favorite</string>
     <string name="unfavorite">Remove from favorites</string>
+    <string name="no_internet">No internet connection.</string>
 </resources>
