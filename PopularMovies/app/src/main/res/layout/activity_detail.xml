@@ -54,14 +54,6 @@
                     <Button
                         android:layout_width="@dimen/button_width"
                         android:layout_height="wrap_content"
-                        android:id="@+id/review_button"
-                        android:text="@string/review_button_text"
-                        android:onClick="onReviewButtonClick"
-                        android:layout_gravity="bottom"/>
-
-                    <Button
-                        android:layout_width="@dimen/button_width"
-                        android:layout_height="wrap_content"
                         android:id="@+id/favorite_button"
                         android:onClick="onFavoriteButtonClick"
                         android:layout_gravity="bottom"
@@ -82,14 +74,33 @@
                 android:layout_height="wrap_content"
                 android:text="@string/trailers"
                 android:layout_marginTop="8dp"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:id="@+id/trailer_textview"/>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/trailer_recyclerview"
-                android:layout_marginBottom="12dp"/>
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reviews"
+                android:layout_marginTop="8dp"
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:id="@+id/review_textview"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/review_recyclerview"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"/>
 
     </LinearLayout>
 </ScrollView>

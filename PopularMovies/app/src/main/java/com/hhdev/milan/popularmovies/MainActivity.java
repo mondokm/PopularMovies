@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MODE_FAVORITE = 2;
 
     int mode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

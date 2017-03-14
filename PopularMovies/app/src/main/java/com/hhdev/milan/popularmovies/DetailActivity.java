@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,10 +28,11 @@ import org.json.JSONObject;
 public class DetailActivity extends AppCompatActivity{
 
     JSONObject data;
-    RecyclerView trailersView;
+    RecyclerView trailersView,reviewsView;
     TrailerAdapter trailerAdapter;
+    ReviewAdapter reviewAdapter;
     SQLiteDatabase sqLiteDatabase;
-    TextView favoriteButton;
+    Button favoriteButton;
     boolean favorite;
 
     @Override
@@ -39,7 +41,7 @@ public class DetailActivity extends AppCompatActivity{
         setContentView(R.layout.activity_detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        favoriteButton = (TextView) findViewById(R.id.favorite_button);
+        favoriteButton = (Button) findViewById(R.id.favorite_button);
 
         favorite = false;
 
@@ -52,7 +54,9 @@ public class DetailActivity extends AppCompatActivity{
             ((TextView) findViewById(R.id.rating)).setText(data.getString(NetworkTools.VOTE_AVERAGE)+getString(R.string.vote_average));
             ((TextView) findViewById(R.id.release_date)).setText(data.getString(NetworkTools.RELEASE_DATE).substring(0,4));
             Picasso.with(this).load(NetworkTools.THE_MOVIE_DB_IMG_URL+data.getString(NetworkTools.POSTER_PATH)).into((ImageView)findViewById(R.id.detail_poster));
+
             new FetchDataTask(new TrailerListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.VIDEOS,1+"");
+            new FetchDataTask(new TaskListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.REVIEWS,1+"");
 
             FavoriteDBHelper helper = new FavoriteDBHelper(this);
             sqLiteDatabase = helper.getWritableDatabase();
@@ -78,14 +82,6 @@ public class DetailActivity extends AppCompatActivity{
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onReviewButtonClick(View v){
-        try {
-            new FetchDataTask(new TaskListener(),getString(R.string.themoviedb_key_v3)).execute(NetworkTools.BASE_URL+"/"+data.getString(NetworkTools.ID)+"/"+NetworkTools.REVIEWS,1+"");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void onFavoriteButtonClick(View v){
@@ -121,10 +117,17 @@ public class DetailActivity extends AppCompatActivity{
     }
 
     public void seeReviews(String data){
-        Intent intent = new Intent(this,ReviewActivity.class);
-        intent.putExtra(Intent.EXTRA_TEXT,data);
-        System.out.println(data);
-        startActivity(intent);
+        JSONObject[] reviews = NetworkTools.responseToArray(data);
+        reviewsView = (RecyclerView) findViewById(R.id.review_recyclerview);
+        reviewAdapter = new ReviewAdapter();
+        reviewsView.setAdapter(reviewAdapter);
+        reviewAdapter.setData(reviews);
+        reviewsView.setLayoutManager(new LinearLayoutManager(this));
+        reviewsView.setVisibility(View.VISIBLE);
+        reviewsView.setNestedScrollingEnabled(false);
+        if(reviews.length!=0) findViewById(R.id.review_textview).setVisibility(View.VISIBLE);
+
+
     }
 
     class TrailerListener implements FetchDataTask.FinishedListener{
@@ -141,6 +144,9 @@ public class DetailActivity extends AppCompatActivity{
         trailerAdapter.setData(trailers);
         trailersView.setLayoutManager(new LinearLayoutManager(this));
         trailersView.setVisibility(View.VISIBLE);
+        trailersView.setNestedScrollingEnabled(false);
+        if(trailers.length!=0) findViewById(R.id.trailer_textview).setVisibility(View.VISIBLE);
+
     }
 
     class TrailerItemListener implements TrailerAdapter.TrailerListener{

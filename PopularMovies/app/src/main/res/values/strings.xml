@@ -10,7 +10,7 @@
     <string name="detail_release">Released:</string>
     <string name="detail_rating">Rating:</string>
     <string name="review_button_text">See reviews</string>
-    <string name="reviews">Reviews</string>
+    <string name="reviews">Reviews:</string>
     <string name="no_reviews">There are no reviews for this movie.</string>
     <string name="no_favorites">You have no favorites.</string>
     <string name="trailers">Trailers:</string>
