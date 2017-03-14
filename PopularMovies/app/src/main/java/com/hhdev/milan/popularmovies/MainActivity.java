@@ -244,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         int noOfColumns = (int) (dpWidth / 180);
         if(noOfColumns>6) noOfColumns=6;
+        if(noOfColumns<2) noOfColumns=2;
         return noOfColumns;
     }
 }
