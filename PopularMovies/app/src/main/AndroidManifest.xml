@@ -28,6 +28,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <provider
+            android:authorities="com.hhdev.milan.popularmovies"
+            android:name="com.hhdev.milan.popularmovies.FavoriteContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>
