@@ -96,7 +96,9 @@ public class DetailActivity extends AppCompatActivity{
                 ContentValues cv = new ContentValues();
                 cv.put(FavoriteContract.Favorites.COLUMN_DATA, data.toString());
                 cv.put(FavoriteContract.Favorites.COLUMN_MOVIE_ID,data.getString(NetworkTools.ID));
-                sqLiteDatabase.insert(FavoriteContract.Favorites.TABLE_NAME,null,cv);
+                //sqLiteDatabase.insert(FavoriteContract.Favorites.TABLE_NAME,null,cv);
+                Uri uri = getContentResolver().insert(FavoriteContract.Favorites.CONTENT_URI, cv);
+
                 favorite=true;
                 favoriteButton.setText(getString(R.string.unfavorite));
             } catch (Exception e){
