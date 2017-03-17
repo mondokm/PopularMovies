@@ -71,7 +71,6 @@ public class DetailActivity extends AppCompatActivity{
             if(cursor.getCount()>0) {
                 favorite = true;
                 favoriteButton.setText(getString(R.string.unfavorite));
-                System.out.println("kekek");
             }
         } catch (Exception e){
             e.printStackTrace();
