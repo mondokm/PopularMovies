@@ -67,11 +67,11 @@ public class DetailActivity extends AppCompatActivity{
             FavoriteDBHelper helper = new FavoriteDBHelper(this);
             sqLiteDatabase = helper.getWritableDatabase();
 
-            String query = "SELECT "+ FavoriteContract.Favorites.COLUMN_MOVIE_ID+" FROM "+ FavoriteContract.Favorites.TABLE_NAME+" WHERE "+ FavoriteContract.Favorites.COLUMN_MOVIE_ID+" = "+data.getString(NetworkTools.ID);
-            Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+            Cursor cursor = getContentResolver().query(FavoriteContract.Favorites.CONTENT_URI, new String[]{FavoriteContract.Favorites.COLUMN_MOVIE_ID}, FavoriteContract.Favorites.COLUMN_MOVIE_ID+"="+data.getString(NetworkTools.ID),null,null);
             if(cursor.getCount()>0) {
                 favorite = true;
                 favoriteButton.setText(getString(R.string.unfavorite));
+                System.out.println("kekek");
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -96,7 +96,6 @@ public class DetailActivity extends AppCompatActivity{
                 ContentValues cv = new ContentValues();
                 cv.put(FavoriteContract.Favorites.COLUMN_DATA, data.toString());
                 cv.put(FavoriteContract.Favorites.COLUMN_MOVIE_ID,data.getString(NetworkTools.ID));
-                //sqLiteDatabase.insert(FavoriteContract.Favorites.TABLE_NAME,null,cv);
                 Uri uri = getContentResolver().insert(FavoriteContract.Favorites.CONTENT_URI, cv);
 
                 favorite=true;
@@ -107,7 +106,10 @@ public class DetailActivity extends AppCompatActivity{
 
         } else{
             try{
-                sqLiteDatabase.delete(FavoriteContract.Favorites.TABLE_NAME, FavoriteContract.Favorites.COLUMN_MOVIE_ID+"="+data.getString(NetworkTools.ID),null);
+                Cursor cursor = getContentResolver().query(FavoriteContract.Favorites.CONTENT_URI, new String[]{FavoriteContract.Favorites._ID}, FavoriteContract.Favorites.COLUMN_MOVIE_ID+"="+data.getString(NetworkTools.ID),null,null);
+                cursor.moveToFirst();
+                int id = cursor.getInt(cursor.getColumnIndex(FavoriteContract.Favorites._ID));
+                int deleted = getContentResolver().delete(FavoriteContract.Favorites.CONTENT_URI.buildUpon().appendPath(id+"").build(), null, null);
                 favorite=false;
                 favoriteButton.setText(getString(R.string.favorite_button_text));
             } catch (Exception e){

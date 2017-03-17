@@ -220,15 +220,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Cursor getFavorites(){
-        String[] columns = {FavoriteContract.Favorites.COLUMN_DATA};
-        return sqLiteDatabase.query(
-                FavoriteContract.Favorites.TABLE_NAME,
-                columns,
-                null,
-                null,
-                null,
-                null,
-                FavoriteContract.Favorites._ID);
+        return getContentResolver().query(FavoriteContract.Favorites.CONTENT_URI,new String[]{FavoriteContract.Favorites.COLUMN_DATA},null,null, FavoriteContract.Favorites._ID);
 
     }
 
